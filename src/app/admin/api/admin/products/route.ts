@@ -14,8 +14,8 @@ export async function GET() {
     const stats = {
       totalProducts: products.length,
       totalCategories: categories.length,
-      lowStock: products.filter((p: any) => p.stock > 0 && p.stock <= 3).length,
-      outOfStock: products.filter((p: any) => p.stock === 0).length,
+      lowStock: products.filter(p => p.stock > 0 && p.stock <= 3).length,
+      outOfStock: products.filter(p => p.stock === 0).length,
     }
 
     return NextResponse.json({ success: true, data: { products, stats } })
@@ -28,9 +28,14 @@ export async function POST(req: Request) {
   try {
     const body = await req.json()
     const { categorySlug, ...rest } = body
+
     const category = await prisma.category.findUnique({ where: { slug: categorySlug } })
     if (!category) return NextResponse.json({ success: false, error: 'Category not found' }, { status: 400 })
-    const product = await prisma.product.create({ data: { ...rest, categoryId: category.id } })
+
+    const product = await prisma.product.create({
+      data: { ...rest, categoryId: category.id },
+    })
+
     return NextResponse.json({ success: true, data: product })
   } catch (e: any) {
     return NextResponse.json({ success: false, error: e.message }, { status: 500 })
