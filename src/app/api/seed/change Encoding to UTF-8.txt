@@ -1,0 +1,11 @@
+const fs = require('fs');
+let card = fs.readFileSync('src/components/product/ProductCard.tsx', 'utf8');
+
+// Replace the emoji line with a colored letter badge
+card = card.replace(
+  `{product.tag === 'Rudraksha' ? '??' : product.tag === 'Jewellery' ? '??' : product.tag === 'Organic' ? '??' : product.certified ? '??' : '??'}`,
+  `{product.name.charAt(0)}`
+);
+
+fs.writeFileSync('src/components/product/ProductCard.tsx', card);
+console.log('Fixed!');

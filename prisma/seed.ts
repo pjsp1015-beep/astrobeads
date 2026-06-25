@@ -1,0 +1,260 @@
+// prisma/seed.ts
+import { PrismaClient } from '@prisma/client'
+import bcrypt from 'bcryptjs'
+
+const prisma = new PrismaClient()
+
+async function main() {
+  console.log('🌱 Seeding database...')
+
+  // ─── Categories ─────────────────────────────────────────────────────────────
+  const categories = await Promise.all([
+    prisma.category.upsert({
+      where: { slug: 'precious' },
+      update: {},
+      create: { name: 'Precious', slug: 'precious', emoji: '💎', description: 'Diamonds, rubies, sapphires and emeralds' },
+    }),
+    prisma.category.upsert({
+      where: { slug: 'semi-precious' },
+      update: {},
+      create: { name: 'Semi-Precious', slug: 'semi-precious', emoji: '🟣', description: 'Amethyst, topaz, garnet and more' },
+    }),
+    prisma.category.upsert({
+      where: { slug: 'organic' },
+      update: {},
+      create: { name: 'Organic', slug: 'organic', emoji: '🪸', description: 'Pearls, coral and amber' },
+    }),
+  ])
+
+  const [precious, semiPrecious, organic] = categories
+
+  // ─── Admin user ─────────────────────────────────────────────────────────────
+  await prisma.user.upsert({
+    where: { email: 'admin@gempandit.com' },
+    update: {},
+    create: {
+      name: 'Admin',
+      email: 'admin@gempandit.com',
+      password: await bcrypt.hash('Admin@123', 12),
+      role: 'ADMIN',
+    },
+  })
+
+  // ─── Products ────────────────────────────────────────────────────────────────
+  const products = [
+    {
+      name: 'Natural Ruby (Manik)',
+      slug: 'natural-ruby-manik',
+      description: 'Pigeon blood Burma ruby, unheated and untreated with deep vivid red saturation. Associated with the Sun (Surya), it enhances confidence, authority, and vitality. GII certified for authenticity.',
+      price: 12500,
+      weight: 2.5,
+      origin: 'Burma',
+      emoji: '🔴',
+      bgColor: '#fff0f0',
+      categoryId: precious.id,
+      tag: 'Precious',
+      certified: true,
+      certificate: 'GII',
+      treatment: 'None',
+      stock: 4,
+      specs: { Shape: 'Oval', Color: 'Pigeon Blood Red', Clarity: 'Eye Clean', Treatment: 'None', Certificate: 'GII', Planet: 'Sun (Surya)' },
+    },
+    {
+      name: 'Blue Sapphire (Neelam)',
+      slug: 'blue-sapphire-neelam',
+      description: 'Royal blue Kashmir sapphire with velvety hue. One of the rarest origins in the world. Associated with Saturn (Shani), it enhances discipline, focus, and career growth.',
+      price: 18900,
+      weight: 3.2,
+      origin: 'Kashmir',
+      emoji: '💎',
+      bgColor: '#e6f1fb',
+      categoryId: precious.id,
+      tag: 'Precious',
+      certified: true,
+      certificate: 'GRS',
+      treatment: 'None',
+      stock: 2,
+      specs: { Shape: 'Cushion', Color: 'Royal Blue', Clarity: 'Eye Clean', Treatment: 'None', Certificate: 'GRS', Planet: 'Saturn (Shani)' },
+    },
+    {
+      name: 'Colombian Emerald (Panna)',
+      slug: 'colombian-emerald-panna',
+      description: 'Vivid green Colombian emerald from the Muzo mines. Minor oil treatment only. Associated with Mercury (Budh), enhances communication, intelligence, and business acumen.',
+      price: 8400,
+      weight: 1.8,
+      origin: 'Colombia',
+      emoji: '💚',
+      bgColor: '#f0fdf4',
+      categoryId: precious.id,
+      tag: 'Precious',
+      certified: true,
+      certificate: 'Gübelin',
+      treatment: 'Minor Oil',
+      stock: 7,
+      specs: { Shape: 'Emerald Cut', Color: 'Vivid Green', Clarity: 'Slightly Included', Treatment: 'Minor Oil', Certificate: 'Gübelin', Planet: 'Mercury (Budh)' },
+    },
+    {
+      name: 'Yellow Sapphire (Pukhraj)',
+      slug: 'yellow-sapphire-pukhraj',
+      description: 'Ceylon yellow sapphire with golden lemon hue. Vedic astrology recommends for Jupiter (Brihaspati). Brings wisdom, prosperity, and good fortune. Completely unheated.',
+      price: 5200,
+      weight: 4.1,
+      origin: 'Sri Lanka',
+      emoji: '⭐',
+      bgColor: '#fffbeb',
+      categoryId: precious.id,
+      tag: 'Precious',
+      certified: true,
+      certificate: 'GII',
+      treatment: 'None',
+      stock: 3,
+      specs: { Shape: 'Round', Color: 'Lemon Yellow', Clarity: 'Eye Clean', Treatment: 'None', Certificate: 'GII', Planet: 'Jupiter (Brihaspati)' },
+    },
+    {
+      name: 'Hessonite Garnet (Gomed)',
+      slug: 'hessonite-garnet-gomed',
+      description: 'Honey brown Gomed (Hessonite) for Rahu planet. Natural and unheated from Ceylon. Removes negative effects of Rahu and brings clarity and focus.',
+      price: 1800,
+      weight: 5.5,
+      origin: 'Sri Lanka',
+      emoji: '🟠',
+      bgColor: '#fffbeb',
+      categoryId: semiPrecious.id,
+      tag: 'Semi-Precious',
+      certified: false,
+      treatment: 'None',
+      stock: 12,
+      specs: { Shape: 'Oval', Color: 'Honey Brown', Clarity: 'Eye Clean', Treatment: 'None', Planet: 'Rahu' },
+    },
+    {
+      name: 'Amethyst',
+      slug: 'amethyst',
+      description: 'Deep purple Brazilian amethyst with excellent saturation. February birthstone. Known for calming energy, intuition, and spiritual awareness.',
+      price: 650,
+      weight: 8.0,
+      origin: 'Brazil',
+      emoji: '🟣',
+      bgColor: '#f5f3ff',
+      categoryId: semiPrecious.id,
+      tag: 'Semi-Precious',
+      certified: false,
+      treatment: 'None',
+      stock: 25,
+      specs: { Shape: 'Pear', Color: 'Deep Purple', Clarity: 'Eye Clean', Treatment: 'None', Birthstone: 'February' },
+    },
+    {
+      name: 'Natural Pearl (Moti)',
+      slug: 'natural-pearl-moti',
+      description: 'Natural Basra pearl — among the most prized in the world. Vedic Moon stone. Enhances emotional balance, intuition, and maternal energy.',
+      price: 3200,
+      weight: 6.2,
+      origin: 'Basra',
+      emoji: '⚪',
+      bgColor: '#f9fafb',
+      categoryId: organic.id,
+      tag: 'Organic',
+      certified: true,
+      certificate: 'AGL',
+      treatment: 'None',
+      stock: 6,
+      specs: { Shape: 'Round', Color: 'Cream White', Luster: 'Excellent', Treatment: 'None', Certificate: 'AGL', Planet: 'Moon (Chandra)' },
+    },
+    {
+      name: 'Blue Topaz',
+      slug: 'blue-topaz',
+      description: 'Swiss blue topaz with electric blue tone. Excellent clarity and brilliance. November birthstone. Promotes communication, creativity, and confidence.',
+      price: 420,
+      weight: 10.0,
+      origin: 'Brazil',
+      emoji: '🔵',
+      bgColor: '#e0f2fe',
+      categoryId: semiPrecious.id,
+      tag: 'Semi-Precious',
+      certified: false,
+      treatment: 'Irradiation',
+      stock: 18,
+      specs: { Shape: 'Cushion', Color: 'Swiss Blue', Clarity: 'Flawless', Treatment: 'Irradiation', Birthstone: 'November' },
+    },
+    {
+      name: "Cat's Eye (Lehsunia)",
+      slug: 'cats-eye-lehsunia',
+      description: "Chrysoberyl cat's eye with strong milk and honey effect. For Ketu planet. Believed to bring good fortune, ward off evil eye, and enhance intuition.",
+      price: 7800,
+      weight: 3.4,
+      origin: 'Sri Lanka',
+      emoji: '🟡',
+      bgColor: '#fefce8',
+      categoryId: precious.id,
+      tag: 'Precious',
+      certified: true,
+      certificate: 'GII',
+      treatment: 'None',
+      stock: 3,
+      specs: { Shape: 'Cabochon', Color: 'Honey Yellow', Effect: 'Strong Chatoyancy', Treatment: 'None', Certificate: 'GII', Planet: 'Ketu' },
+    },
+    {
+      name: 'Red Coral (Moonga)',
+      slug: 'red-coral-moonga',
+      description: 'Moonga (Italian red coral) for Mars (Mangal). Deep red colour without dye. Boosts energy, courage, and physical strength.',
+      price: 2100,
+      weight: 7.0,
+      origin: 'Italy',
+      emoji: '🪸',
+      bgColor: '#fff1f2',
+      categoryId: organic.id,
+      tag: 'Organic',
+      certified: false,
+      treatment: 'None',
+      stock: 8,
+      specs: { Shape: 'Triangular', Color: 'Deep Red', Origin: 'Mediterranean', Treatment: 'None', Planet: 'Mars (Mangal)' },
+    },
+    {
+      name: 'Alexandrite',
+      slug: 'alexandrite',
+      description: 'Colour-change alexandrite — green in daylight, red under incandescent. Extremely rare. Known as the stone of luck and prosperity.',
+      price: 22000,
+      weight: 1.2,
+      origin: 'India',
+      emoji: '🔮',
+      bgColor: '#fdf4ff',
+      categoryId: precious.id,
+      tag: 'Precious',
+      certified: true,
+      certificate: 'GRS',
+      treatment: 'None',
+      stock: 1,
+      specs: { Shape: 'Round', Color: 'Color-Change', Clarity: 'Eye Clean', Treatment: 'None', Certificate: 'GRS' },
+    },
+    {
+      name: 'Lapis Lazuli',
+      slug: 'lapis-lazuli',
+      description: 'Deep blue Afghan lapis lazuli with golden pyrite inclusions. Stone of wisdom, truth, and self-awareness. Used in jewellery for millennia.',
+      price: 280,
+      weight: 15.0,
+      origin: 'Afghanistan',
+      emoji: '🌀',
+      bgColor: '#eff6ff',
+      categoryId: semiPrecious.id,
+      tag: 'Semi-Precious',
+      certified: false,
+      treatment: 'None',
+      stock: 30,
+      specs: { Shape: 'Cabochon', Color: 'Royal Blue', Pattern: 'Golden Pyrite', Treatment: 'None' },
+    },
+  ]
+
+  for (const product of products) {
+    await prisma.product.upsert({
+      where: { slug: product.slug },
+      update: {},
+      create: product,
+    })
+  }
+
+  console.log(`✅ Seeded ${products.length} products, ${categories.length} categories, 1 admin user`)
+  console.log('📧 Admin login: admin@gempandit.com / Admin@123')
+}
+
+main()
+  .catch((e) => { console.error(e); process.exit(1) })
+  .finally(async () => { await prisma.$disconnect() })
