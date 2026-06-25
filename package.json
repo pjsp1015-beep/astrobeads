@@ -2,8 +2,7 @@
   "name": "astrobeads&gems",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "scripts": {
+ "scripts": {
   "postinstall": "prisma generate",
   "dev": "next dev",
   "build": "next build",
