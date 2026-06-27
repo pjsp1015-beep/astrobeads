@@ -2,7 +2,8 @@
 'use client'
 import Link from 'next/link'
 import { useSession, signOut } from 'next-auth/react'
-import { ShoppingBag, User, Search, Menu, X, Star } from 'lucide-react'
+import { ShoppingBag, User, Search, Menu, X } from 'lucide-react'
+import Image from 'next/image'
 import { useState } from 'react'
 import { useCartStore } from '@/lib/store/cart'
 
