@@ -1,6 +1,39 @@
-﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 50" width="160" height="40">
-  <text x="5" y="35" font-family="serif" font-size="28" font-weight="bold" fill="#f59e0b">✦</text>
-  <text x="32" y="32" font-family="Georgia, serif" font-size="18" font-weight="bold" fill="#ffffff">Astro</text>
-  <text x="80" y="32" font-family="Georgia, serif" font-size="18" fill="#f59e0b">Beads</text>
-  <text x="5" y="46" font-family="Georgia, serif" font-size="10" fill="#c4b5fd" letter-spacing="3">&amp; GEMS</text>
+<svg width="320" height="80" viewBox="0 0 320 80" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="320" height="80" fill="#1a0a2e" rx="0"/>
+
+  <!-- Rudraksha bead circle -->
+  <circle cx="40" cy="40" r="28" fill="none" stroke="#e8c97a" stroke-width="2"/>
+
+  <!-- Bead cross lines -->
+  <line x1="40" y1="12" x2="40" y2="68" stroke="#e8c97a" stroke-width="1" opacity="0.45"/>
+  <line x1="12" y1="40" x2="68" y2="40" stroke="#e8c97a" stroke-width="1" opacity="0.45"/>
+
+  <!-- Equator ellipse -->
+  <ellipse cx="40" cy="40" rx="28" ry="13" fill="none" stroke="#e8c97a" stroke-width="0.8" opacity="0.35"/>
+
+  <!-- Gem diamond inside -->
+  <polygon points="40,20 56,38 40,56 24,38" fill="#e8c97a"/>
+  <polygon points="40,20 56,38 40,30" fill="#c9a850"/>
+  <polygon points="40,56 56,38 40,30" fill="#f5d88a" opacity="0.65"/>
+  <line x1="24" y1="38" x2="56" y2="38" stroke="#1a0a2e" stroke-width="0.7" opacity="0.35"/>
+
+  <!-- Cardinal dots -->
+  <circle cx="40" cy="12" r="2.5" fill="#e8c97a"/>
+  <circle cx="68" cy="40" r="2.5" fill="#e8c97a"/>
+  <circle cx="40" cy="68" r="2.5" fill="#e8c97a"/>
+  <circle cx="12" cy="40" r="2.5" fill="#e8c97a"/>
+
+  <!-- Diagonal dots -->
+  <circle cx="60" cy="20" r="1.8" fill="#e8c97a" opacity="0.55"/>
+  <circle cx="20" cy="20" r="1.8" fill="#e8c97a" opacity="0.55"/>
+  <circle cx="60" cy="60" r="1.8" fill="#e8c97a" opacity="0.55"/>
+  <circle cx="20" cy="60" r="1.8" fill="#e8c97a" opacity="0.55"/>
+
+  <!-- Brand name -->
+  <text x="82" y="32" font-family="Georgia, serif" font-size="22" font-weight="400" fill="#e8c97a" letter-spacing="-0.3">Astro</text>
+  <text x="82" y="57" font-family="Georgia, serif" font-size="22" font-weight="300" fill="#ffffff" letter-spacing="-0.3">Beads &amp; Gems</text>
+
+  <!-- Tagline -->
+  <text x="82" y="72" font-family="system-ui, sans-serif" font-size="8.5" fill="#9d8fc0" letter-spacing="2">CERTIFIED · NATURAL · ASTROLOGICAL</text>
 </svg>
