@@ -1,5 +1,4 @@
-// src/components/layout/Navbar.tsx
-'use client'
+﻿'use client'
 import Link from 'next/link'
 import { useSession, signOut } from 'next-auth/react'
 import { ShoppingBag, User, Search, Menu, X } from 'lucide-react'
@@ -14,26 +13,32 @@ export function Navbar() {
   const count = itemCount()
 
   const navLinks = [
-    { href: '/catalog', label: 'Gemstones' },
-    { href: '/catalog?category=precious', label: 'Precious' },
-    { href: '/catalog?category=semi-precious', label: 'Semi-Precious' },
-    { href: '/quiz', label: 'Find Your Gem' },
+    { href: '/catalog?category=rudraksha', label: 'Rudraksha' },
+    { href: '/catalog?category=healing-stones', label: 'Healing Stones' },
+    { href: '/catalog?category=gemstones', label: 'Gemstones' },
+    { href: '/catalog?category=pearls', label: 'Pearls' },
+    { href: '/catalog?category=beads-bracelets', label: 'Beads & Bracelets' },
+    { href: '/catalog?category=jewellery', label: 'Jewellery' },
+    { href: '/quiz', label: '🔮 Free Gem Guide' },
   ]
 
   return (
     <header className="bg-brand-900 text-white sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
+
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2"><Image src="/logo.svg" alt="Astro Beads &amp; Gems" width={200} height={50} priority /></Link>
+          <Link href="/" className="flex items-center">
+            <Image src="/logo.svg" alt="Astro Beads & Gems" width={200} height={50} priority />
+          </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-6">
+          <nav className="hidden lg:flex items-center gap-5">
             {navLinks.map(({ href, label }) => (
               <Link
                 key={href}
                 href={href}
-                className="text-sm text-white/80 hover:text-gold-400 transition-colors"
+                className="text-sm text-white/80 hover:text-gold-400 transition-colors whitespace-nowrap"
               >
                 {label}
               </Link>
@@ -89,9 +94,9 @@ export function Navbar() {
               </Link>
             )}
 
-            {/* Mobile menu */}
+            {/* Mobile menu toggle */}
             <button
-              className="md:hidden p-2 text-white/80 hover:text-white"
+              className="lg:hidden p-2 text-white/80 hover:text-white"
               onClick={() => setMenuOpen(!menuOpen)}
             >
               {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -101,7 +106,7 @@ export function Navbar() {
 
         {/* Mobile menu */}
         {menuOpen && (
-          <div className="md:hidden border-t border-white/10 py-4 space-y-1 animate-fade-in">
+          <div className="lg:hidden border-t border-white/10 py-4 space-y-1">
             {navLinks.map(({ href, label }) => (
               <Link
                 key={href}
@@ -118,5 +123,3 @@ export function Navbar() {
     </header>
   )
 }
-
-
