@@ -13,11 +13,10 @@ export default async function CatalogPage({ searchParams }: Props) {
   const { category, sort, gem } = searchParams
 
   const products = await prisma.product.findMany({
-    where: {
-      active: true,
-      ...(category && { category: { slug: category } }),
-      ...(gem && { slug: { contains: gem } }),
-    },
+  where: {
+    ...(category && { category: { slug: category } }),
+    ...(gem && { slug: { contains: gem } }),
+  },
     include: { category: true },
     orderBy:
       sort === 'price-asc'
