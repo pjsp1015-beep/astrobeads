@@ -1,4 +1,4 @@
-// src/app/product/[slug]/page.tsx
+﻿// src/app/product/[slug]/page.tsx
 import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 import { formatPrice } from '@/lib/utils'
@@ -28,7 +28,7 @@ export default async function ProductPage({ params }: Props) {
 
   const specs = product.specs as Record<string, string>
   const related = await prisma.product.findMany({
-    where: { categoryId: product.categoryId, id: { not: product.id }, active: true },
+    where: { categoryId: product.categoryId, id: { not: product.id }(leave empty) },
     take: 4,
     include: { category: true },
   })
