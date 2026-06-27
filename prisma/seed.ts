@@ -3,24 +3,11 @@
 const prisma = new PrismaClient()
 
 async function main() {
-  const categories = [
-    { name: 'Gemstones', slug: 'gemstones', emoji: '💎' },
-    { name: 'Rudraksha', slug: 'rudraksha', emoji: '📿' },
-    { name: 'Bracelets', slug: 'bracelets', emoji: '🪬' },
-    { name: 'Pendants', slug: 'pendants', emoji: '🔮' },
-  ]
-
-  for (const cat of categories) {
-    await prisma.category.upsert({
-      where: { slug: cat.slug },
-      update: {},
-      create: { name: cat.name, slug: cat.slug, emoji: cat.emoji },
-    })
-  }
-
+  await prisma.category.upsert({ where: { slug: 'gemstones' }, update: {}, create: { name: 'Gemstones', slug: 'gemstones', emoji: '💎' } })
+  await prisma.category.upsert({ where: { slug: 'rudraksha' }, update: {}, create: { name: 'Rudraksha', slug: 'rudraksha', emoji: '📿' } })
+  await prisma.category.upsert({ where: { slug: 'bracelets' }, update: {}, create: { name: 'Bracelets', slug: 'bracelets', emoji: '🪬' } })
+  await prisma.category.upsert({ where: { slug: 'pendants' }, update: {}, create: { name: 'Pendants', slug: 'pendants', emoji: '🔮' } })
   console.log('Seeded categories')
 }
 
-main()
-  .catch(console.error)
-  .finally(() => prisma.$disconnect())
+main().catch(console.error).finally(() => prisma.$disconnect())
