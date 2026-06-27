@@ -1,24 +1,9 @@
-﻿// src/app/product/[slug]/page.tsx
-import { prisma } from '@/lib/prisma'
+﻿import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
-import { formatPrice } from '@/lib/utils'
-import { AddToCartButton } from '@/components/product/AddToCartButton'
-import { CheckCircle, MapPin, Weight, Shield, Star } from 'lucide-react'
 import Link from 'next/link'
-import type { Metadata } from 'next'
+import AddToCartButton from '@/components/product/AddToCartButton'
 
-interface Props { params: { slug: string } }
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const product = await prisma.product.findUnique({ where: { slug: params.slug } })
-  if (!product) return {}
-  return {
-    title: product.name,
-    description: product.description.slice(0, 160),
-  }
-}
-
-export default async function ProductPage({ params }: Props) {
+export default async function ProductPage({ params }: { params: { slug: string } }) {
   const product = await prisma.product.findUnique({
     where: { slug: params.slug },
     include: { category: true },
@@ -26,153 +11,103 @@ export default async function ProductPage({ params }: Props) {
 
   if (!product) notFound()
 
-  const specs = product.specs as Record<string, string>
   const related = await prisma.product.findMany({
     where: { categoryId: product.categoryId, id: { not: product.id } },
+    take: 4,
+    include: { category: true },
   })
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
-      {/* Breadcrumb */}
       <nav className="text-sm text-gray-400 mb-8 flex items-center gap-2">
-        <Link href="/" className="hover:text-gray-600">Home</Link>
+        <Link href="/" className="hover:text-brand-500">Home</Link>
         <span>/</span>
-        <Link href="/catalog" className="hover:text-gray-600">Gemstones</Link>
+        <Link href="/catalog" className="hover:text-brand-500">Catalog</Link>
         <span>/</span>
-        <Link href={`/catalog?category=${product.category.slug}`} className="hover:text-gray-600">
-          {product.category.name}
-        </Link>
+        <Link href={`/catalog?category=${product.category.slug}`} className="hover:text-brand-500">{product.category.name}</Link>
         <span>/</span>
         <span className="text-gray-600">{product.name}</span>
       </nav>
 
       <div className="grid md:grid-cols-2 gap-12 mb-16">
-        {/* Product image */}
+        <div className="aspect-square rounded-2xl flex items-center justify-center text-9xl"
+          style={{ backgroundColor: product.bgColor || '#f5f0ff' }}>
+          {product.emoji}
+        </div>
+
         <div>
-          <div
-            className="rounded-2xl flex items-center justify-center text-8xl aspect-square mb-4"
-            style={{ background: product.bgColor }}
-          >
-            {product.tag === 'Rudraksha' ? 'Ru' :
-             product.tag === 'Jewellery' ? 'Je' :
-             product.tag === 'Organic' ? 'Or' : product.name.charAt(0)}
+          <div className="flex items-center gap-2 mb-3 flex-wrap">
+            <span className="text-xs bg-brand-100 text-brand-700 px-2 py-1 rounded-full">{product.category.name}</span>
+            {product.certified && <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">✅ Certified</span>}
+            {product.tag && <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full">{product.tag}</span>}
           </div>
-          {/* Trust badges */}
-          <div className="grid grid-cols-3 gap-3 mt-4">
+
+          <h1 className="text-3xl font-light text-brand-900 mb-2">{product.name}</h1>
+          <p className="text-gray-500 text-sm mb-6 leading-relaxed">{product.description}</p>
+
+          <div className="text-3xl font-medium text-brand-900 mb-1">
+            ₹{product.price.toLocaleString('en-IN')}
+          </div>
+          <p className="text-xs text-gray-400 mb-6">Inclusive of all taxes · Free shipping above ₹2,000</p>
+
+          <div className="grid grid-cols-2 gap-3 mb-8">
             {[
-              { icon: Shield, label: '100% Natural', sub: 'Authentic stones' },
-              { icon: CheckCircle, label: 'Lab certified', sub: product.certificate || 'Verified quality' },
-              { icon: Star, label: 'Expert curated', sub: 'Vedic guidance' },
-            ].map(({ icon: Icon, label, sub }) => (
-              <div key={label} className="text-center p-3 bg-gray-50 rounded-xl">
-                <Icon className="w-5 h-5 text-brand-500 mx-auto mb-1" />
-                <p className="text-xs font-medium text-gray-800">{label}</p>
-                <p className="text-xs text-gray-400">{sub}</p>
+              { label: 'Weight', value: `${product.weight} carats` },
+              { label: 'Origin', value: product.origin },
+              { label: 'Treatment', value: product.treatment },
+              { label: 'Stock', value: product.stock > 0 ? `${product.stock} available` : 'Out of stock' },
+            ].map(({ label, value }) => (
+              <div key={label} className="bg-gray-50 rounded-xl p-3">
+                <p className="text-xs text-gray-400 mb-1">{label}</p>
+                <p className="text-sm font-medium text-gray-800">{value}</p>
               </div>
             ))}
           </div>
-        </div>
 
-        {/* Product info */}
-        <div>
-          <div className="flex items-center gap-2 mb-3">
-            <span className="badge-tag">{product.tag}</span>
-            <span className="text-gray-300">·</span>
-            <span className="text-sm text-gray-500 flex items-center gap-1">
-              <MapPin className="w-3.5 h-3.5" />{product.origin}
-            </span>
-            {product.weight > 0 && (
-              <>
-                <span className="text-gray-300">·</span>
-                <span className="text-sm text-gray-500 flex items-center gap-1">
-                  <Weight className="w-3.5 h-3.5" />{product.weight} ct
-                </span>
-              </>
-            )}
-          </div>
-
-          <h1 className="text-3xl font-light mb-4">{product.name}</h1>
-
-          {product.certified && (
-            <div className="flex items-center gap-2 mb-5">
-              <span className="badge-certified">
-                <CheckCircle className="w-3.5 h-3.5" />
-                Lab certified — {product.certificate}
-              </span>
-            </div>
+          {product.stock > 0 ? (
+            <AddToCartButton product={product as any} />
+          ) : (
+            <button disabled className="w-full bg-gray-200 text-gray-400 py-4 rounded-xl text-sm cursor-not-allowed">
+              Out of stock
+            </button>
           )}
 
-          <div className="mb-6">
-            <span className="text-4xl font-medium text-gray-900">
-              {formatPrice(product.price)}
-            </span>
-            {product.weight > 0 && (
-              <span className="text-sm font-normal text-gray-400 ml-2">per carat</span>
-            )}
-          </div>
-
-          <p className="text-gray-600 leading-relaxed mb-8">{product.description}</p>
-
-          {/* Stock warning */}
-          {product.stock <= 3 && product.stock > 0 && (
-            <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 mb-6 text-sm text-amber-800">
-              Only {product.stock} left in stock — order soon
-            </div>
-          )}
-          {product.stock === 0 && (
-            <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3 mb-6 text-sm text-red-700">
-              Currently out of stock
-            </div>
-          )}
-
-          <AddToCartButton product={product as any} />
-
-          {/* Guarantees */}
-          <div className="mt-6 pt-6 border-t border-gray-100 grid grid-cols-3 gap-4 text-center">
+          <div className="grid grid-cols-3 gap-3 mt-4 text-center">
             {[
-              { emoji: '🔒', label: 'Secure payment', sub: 'Razorpay · UPI' },
-              { emoji: '↩️', label: '30-day returns', sub: 'Hassle free' },
-              { emoji: '🚚', label: 'Insured shipping', sub: 'Worldwide' },
-            ].map(({ emoji, label, sub }) => (
-              <div key={label}>
-                <p className="text-xl mb-1">{emoji}</p>
-                <p className="text-xs font-medium text-gray-700">{label}</p>
-                <p className="text-xs text-gray-400">{sub}</p>
+              { icon: '🔒', text: 'Secure payment' },
+              { icon: '📦', text: 'Free shipping ₹2000+' },
+              { icon: '↩️', text: '7-day returns' },
+            ].map(({ icon, text }) => (
+              <div key={text} className="bg-gray-50 rounded-xl p-3">
+                <div className="text-lg mb-1">{icon}</div>
+                <p className="text-xs text-gray-500">{text}</p>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Specifications */}
-      {Object.keys(specs).length > 0 && (
-        <div className="mb-16">
-          <h2 className="text-2xl font-light mb-6">Stone specifications</h2>
-          <div className="grid md:grid-cols-2 gap-4">
-            {Object.entries(specs).map(([key, value]) => (
-              <div key={key} className="flex justify-between items-center py-3 px-5 bg-gray-50 rounded-xl">
-                <span className="text-sm text-gray-500">{key}</span>
-                <span className="text-sm font-medium text-gray-900">{value}</span>
-              </div>
-            ))}
-          </div>
+      {product.certified && (
+        <div className="bg-green-50 border border-green-200 rounded-2xl p-6 mb-12">
+          <h3 className="font-medium text-green-800 mb-2">✅ Authenticity Guaranteed</h3>
+          <p className="text-green-700 text-sm">This gemstone comes with a certificate of authenticity from a recognised gemological laboratory.</p>
         </div>
       )}
 
-      {/* Related products */}
       {related.length > 0 && (
         <div>
-          <h2 className="text-2xl font-light mb-6">More from {product.category.name}</h2>
+          <h2 className="text-2xl font-light text-brand-900 mb-6">Similar products</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
-            {related.map((rel) => (
-              <Link key={rel.id} href={`/product/${rel.slug}`}>
-                <div className="card-hover p-4 text-center">
-                  <div className="w-16 h-16 rounded-xl mx-auto mb-3 flex items-center justify-center text-2xl"
-                    style={{ background: rel.bgColor }}>
-                    {rel.name.charAt(0)}
-                  </div>
-                  <p className="text-sm font-medium text-gray-900 mb-1 line-clamp-2">{rel.name}</p>
-                  <p className="text-sm text-brand-600">{formatPrice(rel.price)}</p>
+            {related.map((p) => (
+              <Link key={p.id} href={`/product/${p.slug}`}
+                className="group border border-gray-100 rounded-2xl overflow-hidden hover:shadow-md transition-all">
+                <div className="aspect-square flex items-center justify-center text-5xl"
+                  style={{ backgroundColor: p.bgColor || '#f5f0ff' }}>
+                  {p.emoji}
+                </div>
+                <div className="p-4">
+                  <p className="text-sm font-medium text-gray-800 group-hover:text-brand-600 line-clamp-1">{p.name}</p>
+                  <p className="text-brand-600 font-medium mt-1">₹{p.price.toLocaleString('en-IN')}</p>
                 </div>
               </Link>
             ))}
