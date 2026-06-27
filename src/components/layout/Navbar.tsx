@@ -25,12 +25,7 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <Star className="w-5 h-5 text-gold-400 fill-gold-400" />
-            <span className="text-xl font-medium">
-              <span className="text-gold-400">Astro</span> Beads & Gems
-            </span>
-          </Link>
+          <Link href="/" className="flex items-center gap-2"><Image src="/logo.svg" alt="Astro Beads &amp; Gems" width={140} height={36} priority /></Link>
 
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-6">
@@ -123,3 +118,4 @@ export function Navbar() {
     </header>
   )
 }
+
