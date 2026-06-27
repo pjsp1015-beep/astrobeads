@@ -1,4 +1,4 @@
-﻿// src/app/catalog/page.tsx
+// src/app/catalog/page.tsx
 import { prisma } from '@/lib/prisma'
 import { ProductCard } from '@/components/product/ProductCard'
 import type { Metadata } from 'next'
@@ -85,7 +85,7 @@ export default async function CatalogPage({ searchParams }: Props) {
 
           {products.length === 0 ? (
             <div className="text-center py-20">
-              <p className="text-4xl mb-4">💎</p>
+              <p className="text-4xl mb-4">??</p>
               <p className="text-gray-500">No gemstones found for this filter.</p>
             </div>
           ) : (
