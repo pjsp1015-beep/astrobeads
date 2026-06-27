@@ -8,7 +8,7 @@ import { TrustBadges } from '@/components/layout/TrustBadges'
 
 async function getFeaturedProducts() {
   return prisma.product.findMany({
-    where: { active: true, stock: { gt: 0 } },
+    where: { stock: { gt: 0 } },
     include: { category: true },
     orderBy: { price: 'desc' },
     take: 8,
