@@ -28,9 +28,7 @@ export default async function ProductPage({ params }: Props) {
 
   const specs = product.specs as Record<string, string>
   const related = await prisma.product.findMany({
-    where: { categoryId: product.categoryId, id: { not: product.id }(leave empty) },
-    take: 4,
-    include: { category: true },
+    where: { categoryId: product.categoryId, id: { not: product.id } },
   })
 
   return (
