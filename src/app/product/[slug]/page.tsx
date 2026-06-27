@@ -1,7 +1,7 @@
 ﻿import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import AddToCartButton from '@/components/product/AddToCartButton'
+import { AddToCartButton } from '@/components/product/AddToCartButton'
 
 export default async function ProductPage({ params }: { params: { slug: string } }) {
   const product = await prisma.product.findUnique({
