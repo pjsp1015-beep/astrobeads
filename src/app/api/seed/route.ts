@@ -66,6 +66,11 @@ const products = [
 
 export async function GET() {
   try {
+// Delete old categories not in our list
+const validSlugs = categories.map(c => c.slug)
+await prisma.category.deleteMany({
+  where: { slug: { notIn: validSlugs } }
+})
     for (const cat of categories) {
       await prisma.category.upsert({
         where: { slug: cat.slug },

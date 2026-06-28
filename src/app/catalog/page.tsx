@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { ProductCard } from '@/components/product/ProductCard'
 import type { Metadata } from 'next'
 
-export const metadata: Metadata = { title: 'All Gemstones' }
+export const metadata: Metadata = { title: 'All Products' }
 
 interface Props {
   searchParams: { category?: string; sort?: string; gem?: string }
@@ -77,8 +77,8 @@ export default async function CatalogPage({ searchParams }: Props) {
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-2xl font-light">
               {category
-                ? (categories.find((c) => c.slug === category)?.name || 'All') + ' Gemstones'
-                : 'All Gemstones'}
+                ? (categories.find((c) => c.slug === category)?.name || 'All') + ' Products'
+                : 'All Products'}
             </h1>
             <p className="text-sm text-gray-400">{products.length} found</p>
           </div>
