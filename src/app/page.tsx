@@ -5,6 +5,13 @@ import { ProductCard } from '@/components/product/ProductCard'
 import { CategoryGrid } from '@/components/product/CategoryGrid'
 import { QuizBanner } from '@/components/quiz/QuizBanner'
 import { TrustBadges } from '@/components/layout/TrustBadges'
+import { HeroSlider } from '@/components/layout/HeroSlider'
+
+const CAT_PHOTOS = [
+  { name: 'Gemstones', sub: 'Ruby, Emerald, Sapphire & more', img: 'https://images.unsplash.com/photo-1603695819601-66b33bdee6e5?w=600&q=80', href: '/catalog?category=gemstones' },
+  { name: 'Rudraksha', sub: '1 to 21 Mukhi certified beads',  img: 'https://images.unsplash.com/photo-1611967164521-abae8fba4668?w=600&q=80', href: '/catalog?category=rudraksha' },
+  { name: 'Jewellery',  sub: 'Pendants, rings & bracelets',   img: 'https://images.unsplash.com/photo-1573408301185-9519f94815a5?w=600&q=80', href: '/catalog?category=jewellery' },
+]
 
 async function getFeaturedProducts() {
   return prisma.product.findMany({
@@ -27,55 +34,30 @@ export default async function HomePage() {
 
   return (
     <div>
-      {/* ── Hero ──────────────────────────────────────────── */}
-      <section className="bg-gem-gradient text-white py-24 px-4 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10"
-          style={{ backgroundImage: 'radial-gradient(ellipse at 60% 40%, #e8c97a 0%, transparent 60%)' }}
-        />
-        <div className="max-w-4xl mx-auto text-center relative z-10">
-          <p className="text-xs tracking-[4px] uppercase text-gold-400 mb-4 font-medium">
-            Certified · Natural · Astrological
-          </p>
-          <h1 className="text-5xl md:text-6xl font-light leading-tight mb-6">
-            Discover Gemstones,
-            Rudraksha & Jewellery
-            <br />
-            <span className="text-gold-400 font-normal">Aligned with Your Stars</span>
-          </h1>
-          <p className="text-lg text-white/70 max-w-xl mx-auto mb-10 leading-relaxed">
-            Certified gemstones, original rudraksha & astrological jewellery.
-            Expert Vedic guidance. Worldwide delivery.
-          </p>
-          <div className="flex gap-4 justify-center flex-wrap">
-            <Link href="/catalog" className="btn-gold text-base px-8 py-4">
-              Shop Gemstones
-            </Link>
-            <Link href="/quiz" className="btn-outline border-white/40 text-white hover:border-gold-400 hover:text-gold-400 text-base px-8 py-4">
-              Find Your Gem ✦
-            </Link>
-          </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 pt-12 border-t border-white/10">
-            {[
-              { value: '10,000+', label: 'Gemstones' },
-              { value: '500+', label: 'Rudraksha beads' },
-              { value: '98%', label: 'Lab certified' },
-              { value: '50+', label: 'Countries served' },
-            ].map(({ value, label }) => (
-              <div key={label}>
-                <p className="text-2xl font-medium text-gold-400">{value}</p>
-                <p className="text-sm text-white/60 mt-1">{label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+      {/* ── Cinematic hero slider ── */}
+      <HeroSlider />
+
+      {/* ── Category photo strip ── */}
+      <section className="grid grid-cols-3 gap-0.5 bg-stone-200">
+        {CAT_PHOTOS.map(c => (
+          <Link key={c.name} href={c.href}
+            className="relative h-52 overflow-hidden group block">
+            <img src={c.img} alt={c.name}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/65 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 p-3">
+              <p className="text-white font-semibold text-sm tracking-wide">{c.name}</p>
+              <p className="text-white/60 text-xs">{c.sub}</p>
+            </div>
+          </Link>
+        ))}
       </section>
 
-      {/* ── Trust badges ──────────────────────────────────── */}
+      {/* ── Trust badges ── */}
       <TrustBadges />
 
-      {/* ── Categories ────────────────────────────────────── */}
+      {/* ── Categories ── */}
       <section className="py-14 px-4 bg-gray-50">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-light text-center mb-10">
@@ -85,7 +67,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── Featured products ─────────────────────────────── */}
+      {/* ── Featured products ── */}
       <section className="py-14 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-baseline justify-between mb-8">
@@ -104,14 +86,14 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── Quiz banner ───────────────────────────────────── */}
+      {/* ── Quiz banner ── */}
       <QuizBanner />
 
-      {/* ── Why GemPandit ─────────────────────────────────── */}
+      {/* ── Why us ── */}
       <section className="py-14 px-4 bg-gray-50">
         <div className="max-w-5xl mx-auto text-center">
           <h2 className="text-3xl font-light mb-12">
-            Why <span className="italic text-brand-500">GemPandit</span>
+            Why <span className="italic text-brand-500">Astro Beads & Gems</span>
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
             {[
@@ -128,6 +110,7 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
     </div>
   )
 }
